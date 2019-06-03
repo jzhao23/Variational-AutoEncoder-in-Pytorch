@@ -8,7 +8,7 @@ import matplotlib.pyplot as plt
 import shutil
 
 xrays_dir = "../../openi-chest-xrays/data/xrays" #from VAE/data_process file.
-reports_dir = "../../openi-chest-xrays/data/xrays"
+reports_dir = "../../openi-chest-xrays/data/reports"
 show_histogram = True
 
 def extract_label_from_report(parsed_report):
