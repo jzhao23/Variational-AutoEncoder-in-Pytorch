@@ -69,6 +69,8 @@ def in_distribution_params():
             inputs = Variable(inputs)
         _, mu, logvar = model(inputs)
         std = logvar.mul(0.5).exp_()
+        import pdb
+        pdb.set_trace()
         mu = mu.detach().cpu().numpy()
         std = std.detach().cpu().numpy()
         means.append(mu)
