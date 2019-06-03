@@ -58,6 +58,8 @@ model.eval()
 def in_distribution_params():
     means = []
     std_devs = []
+    means = np.array(means)
+    std_devs = np.array(std_devs)
     for data in dataloaders['in_distr']:
         # get the inputs
         inputs, _ = data
@@ -69,12 +71,12 @@ def in_distribution_params():
             inputs = Variable(inputs)
         _, mu, logvar = model(inputs)
         std = logvar.mul(0.5).exp_()
-        import pdb
-        pdb.set_trace()
+        #import pdb
+        #pdb.set_trace()
         mu = mu.detach().cpu().numpy()
         std = std.detach().cpu().numpy()
-        means.append(mu)
-        std_devs.append(std)
+        means = np.concatenate((means, mu))
+        std_devs = np.concatenate((std_devs, std))
     avg_mu = np.average(means)
     avg_std = np.average(std_devs)
     return (avg_mu, avg_std)
@@ -82,6 +84,8 @@ def in_distribution_params():
 def in_distribution_val_params():
     means = []
     std_devs = []
+    means = np.array(means)
+    std_devs = np.array(std_devs)
     for data in dataloaders['in_distr_val']:
         # get the inputs
         inputs, _ = data
@@ -95,13 +99,15 @@ def in_distribution_val_params():
         std = logvar.mul(0.5).exp_()
         mu = mu.detach().cpu().numpy()
         std = std.detach().cpu().numpy()
-        means.append(mu)
-        std_devs.append(std)
+        means = np.concatenate((means, mu))
+        std_devs = np.concatenate((std_devs, std))
     return (means, std_devs)
 
 def out_distribution_params():
     means = []
     std_devs = []
+    means = np.array(means)
+    std_devs = np.array(std_devs)
     for data in dataloaders['out_distr']:
         # get the inputs
         inputs, _ = data
@@ -115,8 +121,8 @@ def out_distribution_params():
         std = logvar.mul(0.5).exp_()
         mu = mu.detach().cpu().numpy()
         std = std.detach().cpu().numpy()
-        means.append(mu)
-        std_devs.append(std)
+        means = np.concatenate((means, mu))
+        std_devs = np.concatenate((std_devs, std))
     return (means, std_devs)
 
 import pdb
