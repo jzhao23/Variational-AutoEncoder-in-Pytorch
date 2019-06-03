@@ -61,9 +61,9 @@ valid_data_gen = torch.utils.data.DataLoader(valid,batch_size=BATCH_SIZE,num_wor
 dataset_sizes = {'train':len(train_data_gen.dataset),'valid':len(valid_data_gen.dataset)}
 dataloaders = {'train':train_data_gen,'valid':valid_data_gen}
 
-model = ShallowVAE(latent_variable_size=500, nc=3, ngf=224, ndf=224, is_cuda=is_cuda)
+#model = ShallowVAE(latent_variable_size=500, nc=3, ngf=224, ndf=224, is_cuda=is_cuda)
 
-#model = VAE(BasicBlock, [2, 2, 2, 2], latent_variable_size=500, nc=3, ngf=224, ndf=224, is_cuda=is_cuda)
+model = VAE(BasicBlock, [2, 2, 2, 2], latent_variable_size=500, nc=3, ngf=224, ndf=224, is_cuda=is_cuda)
 
 if is_cuda:
     model.cuda()
