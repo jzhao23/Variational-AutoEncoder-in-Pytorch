@@ -47,7 +47,7 @@ dataset_sizes = {'in_distr':len(in_distr_data_gen.dataset),'in_distr_val':len(in
 dataloaders = {'in_distr':in_distr_data_gen,'in_distr_val':in_distr_val_data_gen, 'out_distr':out_distr_data_gen}
 
 model = torch.load("models/"+args.path)
-model.cuda()
+#model.cuda()
 model.eval()
 
 def in_distribution_params():
