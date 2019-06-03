@@ -107,14 +107,14 @@ def train(epoch):
         #print("recon input max/min"+str(recon_batch.max())+"  "+str(recon_batch.min()))
         loss = loss_function(recon_batch, inputs, mu, logvar)
         loss.backward()
-        train_loss += loss.data[0]
+        train_loss += loss.item()
         optimizer.step()
 
         if batch_idx % LOG_INTERVAL == 0:
             print('Train Epoch: {} [{}/{} ({:.0f}%)]\tLoss: {:.6f}'.format(
                 epoch, batch_idx * len(inputs), (len(dataloaders['train'])*128),
                 100. * batch_idx / len(dataloaders['train']),
-                loss.data[0] / len(inputs)))
+                loss.item() / len(inputs)))
         batch_idx+=1
 
     print('====> Epoch: {} Average loss: {:.4f}'.format(
@@ -135,7 +135,7 @@ def test(epoch):
             inputs = Variable(inputs)
         recon_batch, mu, logvar = model(inputs)
         inputs.data = unnormalize(inputs.data,[0.48829153, 0.45526633, 0.41688013],[0.25974154, 0.25308523, 0.25552085])
-        test_loss += loss_function(recon_batch, inputs, mu, logvar).data[0]
+        test_loss += loss_function(recon_batch, inputs, mu, logvar).item()
         if((epoch+1)%10==0):
             torchvision.utils.save_image(inputs.data, './imgs/Epoch_{}_data.jpg'.format(epoch), nrow=8, padding=2)
             torchvision.utils.save_image(recon_batch.data, './imgs/Epoch_{}_recon.jpg'.format(epoch), nrow=8, padding=2)
