@@ -20,7 +20,7 @@ from PIL import Image
 import warnings
 warnings.filterwarnings("ignore")
 
-from vae import VAE, ShallowVAE
+from vae import VAE, ShallowVAE, BasicBlock
 
 
 parser = argparse.ArgumentParser(description='PyTorch VAE')
