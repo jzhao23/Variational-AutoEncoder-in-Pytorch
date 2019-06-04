@@ -132,8 +132,9 @@ def out_distribution_params():
         std_devs = np.concatenate((std_devs, std))
     return (means, std_devs)
 
-import pdb
-pdb.set_trace()
+
 avg_mu, avg_std = in_distribution_params()
 val_means, val_std_devs = in_distribution_val_params()
+import pdb
+pdb.set_trace()
 out_means, out_std_devs = out_distribution_params()
