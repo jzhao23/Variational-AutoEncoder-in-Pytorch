@@ -133,8 +133,8 @@ def out_distribution_params():
     return (means, std_devs)
 
 def get_in_distribution(mu, std_dev):
-    var = np.square(std_dev)
-    return scipy.stats.multivariate_normal(mu, var)
+    #var = np.square(std_dev)
+    return scipy.stats.multivariate_normal(mu, std_dev)
 
 def compute_likelihood(pdf, mu):
     return pdf.pdf(mu)
