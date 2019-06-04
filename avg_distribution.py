@@ -78,8 +78,8 @@ def in_distribution_params():
             std_devs = std
         means = np.concatenate((means, mu))
         std_devs = np.concatenate((std_devs, std))
-    avg_mu = np.average(means)
-    avg_std = np.average(std_devs)
+    avg_mu = np.average(means, axis=0)
+    avg_std = np.average(std_devs, axis=0)
     return (avg_mu, avg_std)
 
 def in_distribution_val_params():
