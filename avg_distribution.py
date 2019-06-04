@@ -210,4 +210,3 @@ cat_avg_mu, cat_avg_var, cat_avg_var_mu = cat_distribution_params()
 #import pdb
 #pdb.set_trace()
 
-
