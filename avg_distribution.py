@@ -18,7 +18,7 @@ from util import *
 import numpy as np
 from PIL import Image
 import warnings
-import scipy.stats
+from scipy.stats import multivariate_normal
 from vae import VAE, ShallowVAE, BasicBlock
 
 
@@ -132,18 +132,14 @@ def out_distribution_params():
         std_devs = np.concatenate((std_devs, std))
     return (means, std_devs)
 
-def get_in_distribution(mu, std_dev):
-    #var = np.square(std_dev)
-    return scipy.stats.multivariate_normal(mu, std_dev)
+def compute_likelihood(x, mu, std_dev):
+    return multivariate_normal.pdf(x, mu, std_dev)
 
-def compute_likelihood(pdf, mu):
-    return pdf.pdf(mu)
 
 avg_mu, avg_std = in_distribution_params()
 val_means, val_std_devs = in_distribution_val_params()
 out_means, out_std_devs = out_distribution_params()
 import pdb
 pdb.set_trace()
-in_pdf = get_in_distribution(avg_mu, avg_std)
 
 
