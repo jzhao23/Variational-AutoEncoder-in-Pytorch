@@ -76,6 +76,7 @@ def in_distribution_params():
         if means is None:
             means = mu
             std_devs = std
+            continue
         means = np.concatenate((means, mu))
         std_devs = np.concatenate((std_devs, std))
     avg_mu = np.average(means, axis=0)
@@ -103,6 +104,7 @@ def in_distribution_val_params():
         if means is None:
             means = mu
             std_devs = std
+            continue
         means = np.concatenate((means, mu))
         std_devs = np.concatenate((std_devs, std))
     return (means, std_devs)
@@ -128,6 +130,7 @@ def out_distribution_params():
         if means is None:
             means = mu
             std_devs = std
+            continue
         means = np.concatenate((means, mu))
         std_devs = np.concatenate((std_devs, std))
     return (means, std_devs)
