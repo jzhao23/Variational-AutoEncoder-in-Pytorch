@@ -133,7 +133,7 @@ def out_distribution_params():
     return (means, std_devs)
 
 def compute_likelihood(x, mu, std_dev):
-    return multivariate_normal.pdf(x, mu, std_dev)
+    return multivariate_normal.pdf(x, mu, 1)
 
 
 avg_mu, avg_std = in_distribution_params()
