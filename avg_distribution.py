@@ -34,7 +34,7 @@ BATCH_SIZE = args.batch_size
 
 path_in = '../InDistribution/'
 path_out = '../OutDistribution/'
-path_cat = '../PetImages/train/Cat'
+path_cat = '../PetImages/train/'
 kwargs = {'num_workers': 3, 'pin_memory': True}
 
 simple_transform = transforms.Compose([transforms.Resize((224,224))
