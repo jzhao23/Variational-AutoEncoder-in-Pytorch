@@ -137,7 +137,7 @@ def out_distribution_params():
 
 
 avg_mu, avg_std = in_distribution_params()
-val_means, val_std_devs = in_distribution_val_params()
 import pdb
 pdb.set_trace()
+val_means, val_std_devs = in_distribution_val_params()
 out_means, out_std_devs = out_distribution_params()
