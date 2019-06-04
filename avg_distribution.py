@@ -86,8 +86,6 @@ def in_distribution_params():
 def in_distribution_val_params():
     means = None
     std_devs = None
-    means = np.array(means)
-    std_devs = np.array(std_devs)
     for data in dataloaders['in_distr_val']:
         # get the inputs
         inputs, _ = data
@@ -112,8 +110,6 @@ def in_distribution_val_params():
 def out_distribution_params():
     means = None
     std_devs = None
-    means = np.array(means)
-    std_devs = np.array(std_devs)
     for data in dataloaders['out_distr']:
         # get the inputs
         inputs, _ = data
