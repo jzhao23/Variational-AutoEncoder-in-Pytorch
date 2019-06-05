@@ -117,7 +117,7 @@ def in_distribution_params():
     avg_std = np.average(std_devs, axis=0) #now a (500,) vector
     avg_var_mu = np.var(means, axis=0)  #(500,)
     avg_var = np.square(avg_std)
-    return (avg_mu, avg_var, avg_var_mu)
+    return (avg_mu, avg_var, avg_var_mu, means)
 
 def out_distribution_params():
     means = None
@@ -145,7 +145,7 @@ def out_distribution_params():
     avg_std = np.average(std_devs, axis=0) #now a (500,) vector
     avg_var_mu = np.var(means, axis=0)  #(500,)
     avg_var = np.square(avg_std)
-    return (avg_mu, avg_var, avg_var_mu)
+    return (avg_mu, avg_var, avg_var_mu, means)
 
 def cat_distribution_params(): #cats training set, not val set
     means = None
@@ -173,7 +173,7 @@ def cat_distribution_params(): #cats training set, not val set
     avg_std = np.average(std_devs, axis=0) #now a (500,) vector
     avg_var_mu = np.var(means, axis=0)  #(500,)
     avg_var = np.square(avg_std)
-    return (avg_mu, avg_var, avg_var_mu)
+    return (avg_mu, avg_var, avg_var_mu, means)
 
 def hand_distribution_params(): #hand test set
     means = None
@@ -201,7 +201,7 @@ def hand_distribution_params(): #hand test set
     avg_std = np.average(std_devs, axis=0) #now a (500,) vector
     avg_var_mu = np.var(means, axis=0)  #(500,)
     avg_var = np.square(avg_std)
-    return (avg_mu, avg_var, avg_var_mu)
+    return (avg_mu, avg_var, avg_var_mu, means)
 
 def flipped_out_distribution_params(): #flipped OOD data
     means = None
@@ -229,61 +229,13 @@ def flipped_out_distribution_params(): #flipped OOD data
     avg_std = np.average(std_devs, axis=0) #now a (500,) vector
     avg_var_mu = np.var(means, axis=0)  #(500,)
     avg_var = np.square(avg_std)
-    return (avg_mu, avg_var, avg_var_mu)
+    return (avg_mu, avg_var, avg_var_mu, means)
 
-"""def in_distribution_val_params():
-    means = None
-    std_devs = None
-    for data in dataloaders['in_distr_val']:
-        # get the inputs
-        inputs, _ = data
-
-        # wrap them in Variable
-        if torch.cuda.is_available():
-            inputs = Variable(inputs.cuda())
-        else:
-            inputs = Variable(inputs)
-        _, mu, logvar = model(inputs)
-        std = logvar.mul(0.5).exp_()
-        mu = mu.detach().cpu().numpy()
-        std = std.detach().cpu().numpy()
-        if means is None:
-            means = mu
-            std_devs = std
-            continue
-        means = np.concatenate((means, mu))
-        std_devs = np.concatenate((std_devs, std))
-    return (means, std_devs)"""
-
-"""def out_distribution_params():
-    means = None
-    std_devs = None
-    for data in dataloaders['out_distr']:
-        # get the inputs
-        inputs, _ = data
-
-        # wrap them in Variable
-        if torch.cuda.is_available():
-            inputs = Variable(inputs.cuda())
-        else:
-            inputs = Variable(inputs)
-        _, mu, logvar = model(inputs)
-        std = logvar.mul(0.5).exp_()
-        mu = mu.detach().cpu().numpy()
-        std = std.detach().cpu().numpy()
-        if means is None:
-            means = mu
-            std_devs = std
-            continue
-        means = np.concatenate((means, mu))
-        std_devs = np.concatenate((std_devs, std))
-    return (means, std_devs)"""
-
-in_avg_mu, in_avg_var, in_avg_var_mu = in_distribution_params()
-out_avg_mu, out_avg_var, out_avg_var_mu = out_distribution_params()
-cat_avg_mu, cat_avg_var, cat_avg_var_mu = cat_distribution_params()
-hand_avg_mu, hand_avg_var, hand_avg_var_mu = hand_distribution_params()
-flipped_out_avg_mu, flipped_out_avg_var, flipped_out_avg_var_mu = hand_distribution_params()
+in_avg_mu, in_avg_var, in_avg_var_mu, in_means = in_distribution_params()
+out_avg_mu, out_avg_var, out_avg_var_mu, out_means = out_distribution_params()
+cat_avg_mu, cat_avg_var, cat_avg_var_mu, cat_means = cat_distribution_params()
+hand_avg_mu, hand_avg_var, hand_avg_var_mu, hand_means = hand_distribution_params()
+flipped_out_avg_mu, flipped_out_avg_var, flipped_out_avg_var_mu, flipped_out_means = flipped_out_distribution_params()
 import pdb
 pdb.set_trace()
 #val_means, val_std_devs = in_distribution_val_params()
