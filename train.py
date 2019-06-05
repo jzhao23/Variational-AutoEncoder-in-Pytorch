@@ -53,7 +53,7 @@ kwargs = {'num_workers': 3, 'pin_memory': True} if is_cuda else {}
 
 simple_transform = transforms.Compose([transforms.Resize((224,224))
                                        ,transforms.ToTensor()]) #transforms.Normalize([0.48829153, 0.45526633, 0.41688013],[0.25974154, 0.25308523, 0.25552085])])
-train = ImageFolder(path+'valid/',simple_transform)
+train = ImageFolder(path+'train/',simple_transform)
 valid = ImageFolder(path+'valid/',simple_transform)
 train_data_gen = torch.utils.data.DataLoader(train,shuffle=True,batch_size=BATCH_SIZE,num_workers=kwargs['num_workers'])
 valid_data_gen = torch.utils.data.DataLoader(valid,batch_size=BATCH_SIZE,num_workers=kwargs['num_workers'])
@@ -121,7 +121,7 @@ def train(epoch):
 
     print('====> Epoch: {} Average loss: {:.4f}'.format(
           epoch, train_loss / (len(dataloaders['train'])*BATCH_SIZE)))
-    print("NUMBER OF DATA  IN TRAIN  LOOP: ", count)
+    print("NUMBER OF DATA  IN TRAIN LOOP: ", count)
     return train_loss / (len(dataloaders['train'])*BATCH_SIZE)
 
 def test(epoch):
