@@ -80,7 +80,7 @@ def loss_function(recon_x, x, mu, logvar):
     KLD_element = mu.pow(2).add_(logvar.exp()).mul_(-1).add_(1).add_(logvar)
     KLD = torch.sum(KLD_element).mul_(-0.5)
 
-    print("MSE LOSS: ", MSE, "KLD Loss: ", KLD)
+    print("MSE LOSS: ", MSE.data, "KLD Loss: ", KLD.data)
 
     return MSE + KLD#hyperparam #HACK
 
