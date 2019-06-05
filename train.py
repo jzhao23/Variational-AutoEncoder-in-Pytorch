@@ -88,7 +88,9 @@ def train(epoch):
     model.train()
     train_loss = 0
     batch_idx = 1
+    count = 0
     for data in dataloaders['train']:
+        count += 1
         # get the inputs
         inputs, _ = data
 
@@ -119,6 +121,7 @@ def train(epoch):
 
     print('====> Epoch: {} Average loss: {:.4f}'.format(
           epoch, train_loss / (len(dataloaders['train'])*BATCH_SIZE)))
+    print("NUMBER OF DATA  IN TRAIN  LOOP: ", count)
     return train_loss / (len(dataloaders['train'])*BATCH_SIZE)
 
 def test(epoch):
