@@ -53,6 +53,28 @@ load_npy("flipped.npy")
 load_npy("cat.npy")
 load_npy("hand.npy")
 
+
+threshold_test("in.npy", 0.001)
+threshold_test("out.npy", 0.001)
+threshold_test("flipped.npy", 0.001)
+threshold_test("cat.npy", 0.001)
+threshold_test("hand.npy", 0.001)
+print("="*80)
+
+threshold_test("in.npy", 0.0015)
+threshold_test("out.npy", 0.0015)
+threshold_test("flipped.npy", 0.0015)
+threshold_test("cat.npy", 0.0015)
+threshold_test("hand.npy", 0.0015)
+print("="*80)
+
+threshold_test("in.npy", 0.002)
+threshold_test("out.npy", 0.002)
+threshold_test("flipped.npy", 0.002)
+threshold_test("cat.npy", 0.002)
+threshold_test("hand.npy", 0.002)
+print("="*80)
+
 threshold_test("in.npy", 0.0025)
 threshold_test("out.npy", 0.0025)
 threshold_test("flipped.npy", 0.0025)
