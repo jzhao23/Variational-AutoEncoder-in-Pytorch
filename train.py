@@ -84,7 +84,7 @@ def loss_function(recon_x, x, mu, logvar):
 
     return MSE + KLD#hyperparam #HACK
 
-optimizer = optim.Adam(model.parameters(), lr=5e-4) #1e-4 #HACK
+optimizer = optim.Adam(model.parameters(), lr=1e-3) #5e-4 working well #1e-4 orig #HACK
 
 def train(epoch):
 
