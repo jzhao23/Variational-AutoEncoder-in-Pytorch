@@ -201,11 +201,11 @@ def cat_distribution_params(): #cats training set, not val set
         std_devs = np.concatenate((std_devs, std))
     return (means, std_devs)"""
 
-import pdb
-pdb.set_trace()
 in_avg_mu, in_avg_var, in_avg_var_mu = in_distribution_params()
 out_avg_mu, out_avg_var, out_avg_var_mu = out_distribution_params()
 cat_avg_mu, cat_avg_var, cat_avg_var_mu = cat_distribution_params()
+import pdb
+pdb.set_trace()
 #val_means, val_std_devs = in_distribution_val_params()
 #out_means, out_std_devs = out_distribution_params()
 #import pdb
