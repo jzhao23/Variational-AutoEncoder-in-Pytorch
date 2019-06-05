@@ -66,7 +66,8 @@ model.load_state_dict(torch.load("models/"+args.path))
 model.cuda()
 model.eval()
 
-#Epoch_1365_Train_loss_0.0002_Test_loss_0.0005.pth
+#Epoch_157_Train_loss_14.0268_Test_loss_17.2915.pth grayscale
+#Epoch_169_Train_loss_13.8677_Test_loss_17.0471.pth no grayscale
 
 def in_distribution_params():
     means = None
