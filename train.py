@@ -52,19 +52,18 @@ path = '../InDistribution/'
 kwargs = {'num_workers': 3, 'pin_memory': True} if is_cuda else {}
 
 simple_transform = transforms.Compose([transforms.Resize((224,224))
-                                       ,transforms.ToTensor()]) #transforms.Normalize([0.48829153, 0.45526633, 0.41688013],[0.25974154, 0.25308523, 0.25552085])])
-train = ImageFolder(path+'valid/',simple_transform) # HACK
-valid = ImageFolder(path+'valid/',simple_transform)
+                                       ,transforms.ToTensor()]) #transforms.Normalize([0.48829153, 0.45526633, 0.41688013],[0.25974154, 0.25308523, 0.25552085])]) #HACK
+train = ImageFolder(path+'small/',simple_transform) # HACK
+valid = ImageFolder(path+'small/',simple_transform)
 train_data_gen = torch.utils.data.DataLoader(train,batch_size=BATCH_SIZE,num_workers=kwargs['num_workers']) #HACK #shuffle=True
 valid_data_gen = torch.utils.data.DataLoader(valid,batch_size=BATCH_SIZE,num_workers=kwargs['num_workers'])
 
-#dataset_sizes = {'train':len(train_data_gen.dataset),'valid':len(valid_data_gen.dataset)}
-dataset_sizes = {'train':10,'valid':10}
+dataset_sizes = {'train':len(train_data_gen.dataset),'valid':len(valid_data_gen.dataset)}
 dataloaders = {'train':train_data_gen,'valid':valid_data_gen}
 
 #model = ShallowVAE(latent_variable_size=500, nc=3, ngf=224, ndf=224, is_cuda=is_cuda)
 
-model = VAE(BasicBlock, [2, 2, 2, 2], latent_variable_size=1024, nc=3, ngf=224, ndf=224, is_cuda=is_cuda)
+model = VAE(BasicBlock, [2, 2, 2, 2], latent_variable_size=500, nc=3, ngf=224, ndf=224, is_cuda=is_cuda) 
 
 if is_cuda:
     model.cuda()
@@ -80,9 +79,9 @@ def loss_function(recon_x, x, mu, logvar):
     KLD_element = mu.pow(2).add_(logvar.exp()).mul_(-1).add_(1).add_(logvar)
     KLD = torch.sum(KLD_element).mul_(-0.5)
 
-    return MSE + KLD * 0.001 #hyperparam
+    return MSE + KLD * 0.001 #hyperparam #HACK
 
-optimizer = optim.Adam(model.parameters(), lr=1e-3) #1e-4
+optimizer = optim.Adam(model.parameters(), lr=1e-3) #1e-4 #HACK
 
 def train(epoch):
 
@@ -104,7 +103,7 @@ def train(epoch):
         optimizer.zero_grad()
         recon_batch, mu, logvar = model(inputs)
         #print(inputs.data.size())
-        #inputs.data = unnormalize(inputs.data,[0.48829153, 0.45526633, 0.41688013],[0.25974154, 0.25308523, 0.25552085])
+        #inputs.data = unnormalize(inputs.data,[0.48829153, 0.45526633, 0.41688013],[0.25974154, 0.25308523, 0.25552085]) #HACK
 
         #print("input max/min"+str(inputs.max())+"  "+str(inputs.min()))
         #print("recon input max/min"+str(recon_batch.max())+"  "+str(recon_batch.min()))
@@ -140,7 +139,7 @@ def test(epoch):
         else:
             inputs = Variable(inputs)
         recon_batch, mu, logvar = model(inputs)
-        #inputs.data = unnormalize(inputs.data,[0.48829153, 0.45526633, 0.41688013],[0.25974154, 0.25308523, 0.25552085])
+        #inputs.data = unnormalize(inputs.data,[0.48829153, 0.45526633, 0.41688013],[0.25974154, 0.25308523, 0.25552085]) #HACK
         test_loss += loss_function(recon_batch, inputs, mu, logvar).item()
         if((epoch+1)%10==0) and count == 1:
             torchvision.utils.save_image(inputs.data, './imgs/Epoch_{}_data.jpg'.format(epoch), nrow=8, padding=2)
