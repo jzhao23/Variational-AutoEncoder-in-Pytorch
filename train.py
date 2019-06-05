@@ -72,14 +72,14 @@ reconstruction_function = nn.MSELoss()
 reconstruction_function.size_average = False
 def loss_function(recon_x, x, mu, logvar):
 
-    MSE = reconstruction_function(recon_x, x)
+    MSE = reconstruction_function(recon_x*255, x*255)
 
     # https://arxiv.org/abs/1312.6114 (Appendix B)
     # 0.5 * sum(1 + log(sigma^2) - mu^2 - sigma^2)
     KLD_element = mu.pow(2).add_(logvar.exp()).mul_(-1).add_(1).add_(logvar)
     KLD = torch.sum(KLD_element).mul_(-0.5)
 
-    return MSE + KLD * 0.001 #hyperparam #HACK
+    return MSE + KLD#hyperparam #HACK
 
 optimizer = optim.Adam(model.parameters(), lr=1e-4) #1e-4 #HACK
 
