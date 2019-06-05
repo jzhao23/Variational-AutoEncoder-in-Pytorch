@@ -132,8 +132,6 @@ def test(epoch):
         count += 1
         # get the inputs
         inputs, _ = data
-        print("batch_size: ", inputs.size()[0])
-        #import pdb; pdb.set_trace()
 
         # wrap them in Variable
         if torch.cuda.is_available():
@@ -143,7 +141,7 @@ def test(epoch):
         recon_batch, mu, logvar = model(inputs)
         #inputs.data = unnormalize(inputs.data,[0.48829153, 0.45526633, 0.41688013],[0.25974154, 0.25308523, 0.25552085])
         test_loss += loss_function(recon_batch, inputs, mu, logvar).item()
-        if((epoch+1)%10==0):
+        if((epoch+1)%10==0) and count == 1:
             torchvision.utils.save_image(inputs.data, './imgs/Epoch_{}_data.jpg'.format(epoch), nrow=8, padding=2)
             torchvision.utils.save_image(recon_batch.data, './imgs/Epoch_{}_recon.jpg'.format(epoch), nrow=8, padding=2)
 
