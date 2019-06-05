@@ -51,31 +51,31 @@ cat_transform = transforms.Compose([transforms.Resize((224,224)),
                                        #transforms.Grayscale(num_output_channels=3),  #HACK
                                        transforms.ToTensor()])
 in_distr = ImageFolder(path_in+'train/',simple_transform)
-in_distr_data_gen = torch.utils.data.DataLoader(in_distr,shuffle=True,batch_size=BATCH_SIZE,num_workers=kwargs['num_workers'])
+in_distr_data_gen = torch.utils.data.DataLoader(in_distr,batch_size=BATCH_SIZE,num_workers=kwargs['num_workers'])
 
-in_distr_val = ImageFolder(path_in+'valid/',simple_transform)
-in_distr_val_data_gen = torch.utils.data.DataLoader(in_distr_val,shuffle=True,batch_size=BATCH_SIZE,num_workers=kwargs['num_workers'])
+in_val_distr = ImageFolder(path_in+'valid/',simple_transform)
+in_val_distr_data_gen = torch.utils.data.DataLoader(in_val_distr,batch_size=BATCH_SIZE,num_workers=kwargs['num_workers'])
 
 out_distr = ImageFolder(path_out,simple_transform)
-out_distr_data_gen = torch.utils.data.DataLoader(out_distr,shuffle=True,batch_size=BATCH_SIZE,num_workers=kwargs['num_workers'])
+out_distr_data_gen = torch.utils.data.DataLoader(out_distr,batch_size=BATCH_SIZE,num_workers=kwargs['num_workers'])
 
 flipped_out_distr = ImageFolder(path_out,flipped_transform)
-flipped_out_distr_data_gen = torch.utils.data.DataLoader(flipped_out_distr,shuffle=True,batch_size=BATCH_SIZE,num_workers=kwargs['num_workers'])
+flipped_out_distr_data_gen = torch.utils.data.DataLoader(flipped_out_distr,batch_size=BATCH_SIZE,num_workers=kwargs['num_workers'])
 
 cat_distr = ImageFolder(path_cat,cat_transform)
-cat_distr_data_gen = torch.utils.data.DataLoader(cat_distr,shuffle=True,batch_size=BATCH_SIZE,num_workers=kwargs['num_workers'])
+cat_distr_data_gen = torch.utils.data.DataLoader(cat_distr,batch_size=BATCH_SIZE,num_workers=kwargs['num_workers'])
 
 hand_distr = ImageFolder(path_hand,simple_transform)
-hand_distr_data_gen = torch.utils.data.DataLoader(hand_distr,shuffle=True,batch_size=BATCH_SIZE,num_workers=kwargs['num_workers'])
+hand_distr_data_gen = torch.utils.data.DataLoader(hand_distr,batch_size=BATCH_SIZE,num_workers=kwargs['num_workers'])
 
 dataset_sizes = {'in_distr':len(in_distr_data_gen.dataset),
-    'in_distr_val':len(in_distr_val_data_gen.dataset), 
+    'in_val_distr':len(in_val_distr_data_gen.dataset), 
     'out_distr':len(out_distr_data_gen.dataset),
     'cat_distr':len(cat_distr_data_gen.dataset),
     'hand_distr':len(hand_distr_data_gen.dataset),
     'flipped_out_distr':len(flipped_out_distr_data_gen.dataset)  }
 dataloaders = {'in_distr':in_distr_data_gen,
-    'in_distr_val':in_distr_val_data_gen, 
+    'in_val_distr':in_val_distr_data_gen, 
     'out_distr':out_distr_data_gen,
     'cat_distr':cat_distr_data_gen,
     'hand_distr':hand_distr_data_gen,
@@ -95,6 +95,34 @@ def in_distribution_params():
     means = None
     std_devs = None
     for data in dataloaders['in_distr']:
+        # get the inputs
+        inputs, _ = data
+
+        # wrap them in Variable
+        if torch.cuda.is_available():
+            inputs = Variable(inputs.cuda())
+        else:
+            inputs = Variable(inputs)
+        _, mu, logvar = model(inputs)
+        std = logvar.mul(0.5).exp_()
+        mu = mu.detach().cpu().numpy()
+        std = std.detach().cpu().numpy()
+        if means is None:
+            means = mu
+            std_devs = std
+            continue
+        means = np.concatenate((means, mu))
+        std_devs = np.concatenate((std_devs, std))
+    avg_mu = np.average(means, axis=0) #now a (500,) vector
+    avg_std = np.average(std_devs, axis=0) #now a (500,) vector
+    avg_var_mu = np.var(means, axis=0)  #(500,)
+    avg_var = np.square(avg_std)
+    return (avg_mu, avg_var, avg_var_mu, means)
+
+def in_val_distribution_params():
+    means = None
+    std_devs = None
+    for data in dataloaders['in_val_distr']:
         # get the inputs
         inputs, _ = data
 
@@ -232,12 +260,25 @@ def flipped_out_distribution_params(): #flipped OOD data
     return (avg_mu, avg_var, avg_var_mu, means)
 
 in_avg_mu, in_avg_var, in_avg_var_mu, in_means = in_distribution_params()
+#in_val_avg_mu, in_val_avg_var, in_val_avg_var_mu, in_val_means = in_distribution_params()
 out_avg_mu, out_avg_var, out_avg_var_mu, out_means = out_distribution_params()
 cat_avg_mu, cat_avg_var, cat_avg_var_mu, cat_means = cat_distribution_params()
 hand_avg_mu, hand_avg_var, hand_avg_var_mu, hand_means = hand_distribution_params()
 flipped_out_avg_mu, flipped_out_avg_var, flipped_out_avg_var_mu, flipped_out_means = flipped_out_distribution_params()
-import pdb
-pdb.set_trace()
+
+def get_pdfs(in_avg_mu, in_means, data_means, filename):
+    cov = np.cov(in_means.T)
+    pdf = []
+    for x in data_means:
+        pdf.append(multivariate_normal.pdf(x, in_avg_mu, cov))
+    np.save("../ood_data/" + filename, pdf)
+
+get_pdfs(in_avg_mu, in_means, in_means, "in")
+get_pdfs(in_avg_mu, in_means, out_means, "out")
+get_pdfs(in_avg_mu, in_means, cat_means, "cat")
+get_pdfs(in_avg_mu, in_means, hand_means, "hand")
+get_pdfs(in_avg_mu, in_means, flipped_out_means, "flipped")
+
 #val_means, val_std_devs = in_distribution_val_params()
 #out_means, out_std_devs = out_distribution_params()
 #import pdb
