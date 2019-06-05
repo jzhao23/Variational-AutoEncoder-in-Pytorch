@@ -79,7 +79,7 @@ def loss_function(recon_x, x, mu, logvar):
     KLD_element = mu.pow(2).add_(logvar.exp()).mul_(-1).add_(1).add_(logvar)
     KLD = torch.sum(KLD_element).mul_(-0.5)
 
-    return MSE + KLD
+    return MSE + KLD * 0.001
 
 optimizer = optim.Adam(model.parameters(), lr=1e-4)
 
@@ -140,7 +140,7 @@ def test(epoch):
             torchvision.utils.save_image(inputs.data, './imgs/Epoch_{}_data.jpg'.format(epoch), nrow=8, padding=2)
             torchvision.utils.save_image(recon_batch.data, './imgs/Epoch_{}_recon.jpg'.format(epoch), nrow=8, padding=2)
 
-    test_loss /= (len(dataloaders['valid'])*128)
+    test_loss /= (len(dataloaders['valid'])*BATCH_SIZE)
     print('====> Test set loss: {:.4f}'.format(test_loss))
     return test_loss
 
