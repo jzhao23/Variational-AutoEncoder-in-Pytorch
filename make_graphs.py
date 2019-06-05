@@ -24,7 +24,7 @@ from vae import VAE, ShallowVAE, BasicBlock
 
 def load_npy(filename):
     data = np.load("../ood_data/" + filename)
-    print(filename + ": ", data)
+    print(filename)
     print("data mean: ", np.average(data))
     print("data median: ", np.median(data))
     print("data min: ", np.min(data))
