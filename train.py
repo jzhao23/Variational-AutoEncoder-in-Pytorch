@@ -52,7 +52,7 @@ path = '../InDistribution/'
 kwargs = {'num_workers': 3, 'pin_memory': True} if is_cuda else {}
 
 simple_transform = transforms.Compose([transforms.Resize((224,224)),
-                                       transforms.functional.to_grayscale(num_output_channels=3),  #HACK
+                                       transforms.Grayscale(num_output_channels=3),  #HACK
                                        transforms.ToTensor()]) #transforms.Normalize([0.48829153, 0.45526633, 0.41688013],[0.25974154, 0.25308523, 0.25552085])]) #HACK
 train = ImageFolder(path+'train/',simple_transform)
 valid = ImageFolder(path+'valid/',simple_transform)
