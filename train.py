@@ -133,7 +133,7 @@ def test(epoch):
         # get the inputs
         inputs, _ = data
         print("batch_size: ", inputs.size()[0])
-        import pdb; pdb.set_trace()
+        #import pdb; pdb.set_trace()
 
         # wrap them in Variable
         if torch.cuda.is_available():
