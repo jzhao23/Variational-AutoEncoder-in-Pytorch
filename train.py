@@ -53,12 +53,13 @@ kwargs = {'num_workers': 3, 'pin_memory': True} if is_cuda else {}
 
 simple_transform = transforms.Compose([transforms.Resize((224,224))
                                        ,transforms.ToTensor()]) #transforms.Normalize([0.48829153, 0.45526633, 0.41688013],[0.25974154, 0.25308523, 0.25552085])])
-train = ImageFolder(path+'train/',simple_transform)
+train = ImageFolder(path+'valid/',simple_transform) # HACK
 valid = ImageFolder(path+'valid/',simple_transform)
-train_data_gen = torch.utils.data.DataLoader(train,shuffle=True,batch_size=BATCH_SIZE,num_workers=kwargs['num_workers'])
+train_data_gen = torch.utils.data.DataLoader(train,batch_size=BATCH_SIZE,num_workers=kwargs['num_workers']) #HACK #shuffle=True
 valid_data_gen = torch.utils.data.DataLoader(valid,batch_size=BATCH_SIZE,num_workers=kwargs['num_workers'])
 
-dataset_sizes = {'train':len(train_data_gen.dataset),'valid':len(valid_data_gen.dataset)}
+#dataset_sizes = {'train':len(train_data_gen.dataset),'valid':len(valid_data_gen.dataset)}
+dataset_sizes = {'train':10,'valid':10}
 dataloaders = {'train':train_data_gen,'valid':valid_data_gen}
 
 #model = ShallowVAE(latent_variable_size=500, nc=3, ngf=224, ndf=224, is_cuda=is_cuda)
