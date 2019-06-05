@@ -82,10 +82,10 @@ def loss_function(recon_x, x, mu, logvar):
 
     print("MSE LOSS: ", MSE.data, "KLD Loss: ", KLD.data)
 
-    return MSE + KLD#hyperparam #HACK
+    return MSE + KLD #HACK
 
-optimizer = optim.Adam(model.parameters(), lr=1e-5) #HACK
-#1e-3 overfit... KL loss super low like 0.01 very fast, but only  chest xray. #5e-4 working well! #1e-4 orig.. 
+optimizer = optim.Adam(model.parameters(), lr=5e-4) #HACK
+#1e-5 same thing ... just   slower #1e-3 overfit... KL loss super low like 0.01 very fast, but only  chest xray. #5e-4 working well! #1e-4 orig.. 
 
 def train(epoch):
 
