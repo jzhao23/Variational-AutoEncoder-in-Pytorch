@@ -270,7 +270,7 @@ def get_pdfs(in_avg_mu, in_means, data_means, filename):
     cov = np.cov(in_means.T)
     pdf = []
     for x in data_means:
-        pdf.append(multivariate_normal.pdf(x, in_avg_mu, cov))
+        pdf.append(multivariate_normal.pdf(x, in_avg_mu, cov, allow_singular=True))
     np.save("../ood_data/" + filename, pdf)
 
 get_pdfs(in_avg_mu, in_means, in_means, "in")
