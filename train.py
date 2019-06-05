@@ -79,9 +79,9 @@ def loss_function(recon_x, x, mu, logvar):
     KLD_element = mu.pow(2).add_(logvar.exp()).mul_(-1).add_(1).add_(logvar)
     KLD = torch.sum(KLD_element).mul_(-0.5)
 
-    return MSE + KLD * 0.001
+    return MSE + KLD * 0.001 #hyperparam
 
-optimizer = optim.Adam(model.parameters(), lr=1e-4)
+optimizer = optim.Adam(model.parameters(), lr=1e-3) #1e-4
 
 def train(epoch):
 
@@ -112,7 +112,7 @@ def train(epoch):
 
         if batch_idx % LOG_INTERVAL == 0:
             print('Train Epoch: {} [{}/{} ({:.0f}%)]\tLoss: {:.6f}'.format(
-                epoch, batch_idx * len(inputs), (len(dataloaders['train'])*128),
+                epoch, batch_idx * len(inputs), (len(dataloaders['train'])*BATCH_SIZE),
                 100. * batch_idx / len(dataloaders['train']),
                 loss.item() / len(inputs)))
         batch_idx+=1
@@ -124,7 +124,9 @@ def train(epoch):
 def test(epoch):
     model.eval()
     test_loss = 0
+    count = 0
     for data in dataloaders['valid']:
+        count += 1
         # get the inputs
         inputs, _ = data
 
@@ -142,6 +144,7 @@ def test(epoch):
 
     test_loss /= (len(dataloaders['valid'])*BATCH_SIZE)
     print('====> Test set loss: {:.4f}'.format(test_loss))
+    print("NUMBER OF DATA  IN VALID  LOOP: ", count)
     return test_loss
 
 writer = SummaryWriter('runs/exp-1')
