@@ -56,7 +56,7 @@ simple_transform = transforms.Compose([transforms.Resize((224,224)),
                                        transforms.ToTensor()]) #transforms.Normalize([0.48829153, 0.45526633, 0.41688013],[0.25974154, 0.25308523, 0.25552085])]) #HACK
 train = ImageFolder(path+'train/',simple_transform)
 valid = ImageFolder(path+'valid/',simple_transform)
-train_data_gen = torch.utils.data.DataLoader(train,batch_size=BATCH_SIZE,num_workers=kwargs['num_workers']) #HACK #shuffle=True
+train_data_gen = torch.utils.data.DataLoader(train,shuffle=True,batch_size=BATCH_SIZE,num_workers=kwargs['num_workers']) #used to be HACK with  shuffle false
 valid_data_gen = torch.utils.data.DataLoader(valid,batch_size=BATCH_SIZE,num_workers=kwargs['num_workers'])
 
 dataset_sizes = {'train':len(train_data_gen.dataset),'valid':len(valid_data_gen.dataset)}
