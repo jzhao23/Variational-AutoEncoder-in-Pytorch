@@ -258,7 +258,8 @@ def flipped_out_distribution_params(): #flipped OOD data
     avg_var_mu = np.var(means, axis=0)  #(500,)
     avg_var = np.square(avg_std)
     return (avg_mu, avg_var, avg_var_mu, means)
-
+    
+import pdb;pdb.set_trace()
 in_avg_mu, in_avg_var, in_avg_var_mu, in_means = in_distribution_params()
 #in_val_avg_mu, in_val_avg_var, in_val_avg_var_mu, in_val_means = in_distribution_params()
 out_avg_mu, out_avg_var, out_avg_var_mu, out_means = out_distribution_params()
