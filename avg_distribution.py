@@ -38,8 +38,14 @@ path_cat = '../PetImages/train/'
 path_hand = '../Bone/valid/'
 kwargs = {'num_workers': 3, 'pin_memory': True}
 
-simple_transform = transforms.Compose([transforms.Resize((224,224))
-                                       ,transforms.ToTensor(), transforms.Normalize([0.48829153, 0.45526633, 0.41688013],[0.25974154, 0.25308523, 0.25552085])])
+"""simple_transform = transforms.Compose([transforms.Resize((224,224))
+                                       ,transforms.ToTensor(), transforms.Normalize([0.48829153, 0.45526633, 0.41688013],[0.25974154, 0.25308523, 0.25552085])])"""
+simple_transform = transforms.Compose([transforms.Resize((224,224)),
+                                       transforms.Grayscale(num_output_channels=3),  #HACK
+                                       transforms.ToTensor()])
+cat_transform = transforms.Compose([transforms.Resize((224,224)),
+                                       #transforms.Grayscale(num_output_channels=3),  #HACK
+                                       transforms.ToTensor()])
 in_distr = ImageFolder(path_in+'train/',simple_transform)
 in_distr_data_gen = torch.utils.data.DataLoader(in_distr,shuffle=True,batch_size=BATCH_SIZE,num_workers=kwargs['num_workers'])
 
@@ -49,7 +55,7 @@ in_distr_val_data_gen = torch.utils.data.DataLoader(in_distr_val,shuffle=True,ba
 out_distr = ImageFolder(path_out,simple_transform)
 out_distr_data_gen = torch.utils.data.DataLoader(out_distr,shuffle=True,batch_size=BATCH_SIZE,num_workers=kwargs['num_workers'])
 
-cat_distr = ImageFolder(path_cat,simple_transform)
+cat_distr = ImageFolder(path_cat,cat_transform)
 cat_distr_data_gen = torch.utils.data.DataLoader(cat_distr,shuffle=True,batch_size=BATCH_SIZE,num_workers=kwargs['num_workers'])
 
 hand_distr = ImageFolder(path_hand,simple_transform)
