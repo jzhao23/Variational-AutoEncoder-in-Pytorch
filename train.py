@@ -132,6 +132,7 @@ def test(epoch):
         count += 1
         # get the inputs
         inputs, _ = data
+        import pdb; pdb.set_trace()
 
         # wrap them in Variable
         if torch.cuda.is_available():
