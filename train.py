@@ -51,8 +51,9 @@ LOG_INTERVAL=args.log_interval
 path = '../InDistribution/'
 kwargs = {'num_workers': 3, 'pin_memory': True} if is_cuda else {}
 
-simple_transform = transforms.Compose([transforms.Resize((224,224))
-                                       ,transforms.ToTensor()]) #transforms.Normalize([0.48829153, 0.45526633, 0.41688013],[0.25974154, 0.25308523, 0.25552085])]) #HACK
+simple_transform = transforms.Compose([transforms.Resize((224,224)),
+                                       #transforms.functional.to_grayscale(num_output_channels=3),  #HACK
+                                       transforms.ToTensor()]) #transforms.Normalize([0.48829153, 0.45526633, 0.41688013],[0.25974154, 0.25308523, 0.25552085])]) #HACK
 train = ImageFolder(path+'small/',simple_transform) # HACK
 valid = ImageFolder(path+'small/',simple_transform)
 train_data_gen = torch.utils.data.DataLoader(train,batch_size=BATCH_SIZE,num_workers=kwargs['num_workers']) #HACK #shuffle=True
@@ -72,7 +73,7 @@ reconstruction_function = nn.MSELoss()
 reconstruction_function.size_average = False
 def loss_function(recon_x, x, mu, logvar):
 
-    MSE = reconstruction_function(recon_x*255, x*255)
+    MSE = reconstruction_function(recon_x*255, x*255) #HACK
 
     # https://arxiv.org/abs/1312.6114 (Appendix B)
     # 0.5 * sum(1 + log(sigma^2) - mu^2 - sigma^2)
