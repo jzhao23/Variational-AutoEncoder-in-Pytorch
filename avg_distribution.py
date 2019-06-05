@@ -35,6 +35,7 @@ BATCH_SIZE = args.batch_size
 path_in = '../InDistribution/'
 path_out = '../OutDistribution/'
 path_cat = '../PetImages/train/'
+path_hand = '../Bone/valid/'
 kwargs = {'num_workers': 3, 'pin_memory': True}
 
 simple_transform = transforms.Compose([transforms.Resize((224,224))
@@ -51,14 +52,19 @@ out_distr_data_gen = torch.utils.data.DataLoader(out_distr,shuffle=True,batch_si
 cat_distr = ImageFolder(path_cat,simple_transform)
 cat_distr_data_gen = torch.utils.data.DataLoader(cat_distr,shuffle=True,batch_size=BATCH_SIZE,num_workers=kwargs['num_workers'])
 
+hand_distr = ImageFolder(path_hand,simple_transform)
+hand_distr_data_gen = torch.utils.data.DataLoader(hand_distr,shuffle=True,batch_size=BATCH_SIZE,num_workers=kwargs['num_workers'])
+
 dataset_sizes = {'in_distr':len(in_distr_data_gen.dataset),
     'in_distr_val':len(in_distr_val_data_gen.dataset), 
     'out_distr':len(out_distr_data_gen.dataset),
-    'cat_distr':len(cat_distr_data_gen.dataset) }
+    'cat_distr':len(cat_distr_data_gen.dataset),
+    'hand_distr':len(hand_distr_data_gen.dataset)  }
 dataloaders = {'in_distr':in_distr_data_gen,
     'in_distr_val':in_distr_val_data_gen, 
     'out_distr':out_distr_data_gen,
-    'cat_distr':cat_distr_data_gen}
+    'cat_distr':cat_distr_data_gen,
+    'hand_distr':hand_distr_data_gen}
 
 
 model = VAE(BasicBlock, [2, 2, 2, 2], latent_variable_size=500, nc=3, ngf=224, ndf=224, is_cuda=True)
@@ -68,6 +74,7 @@ model.eval()
 
 #Epoch_157_Train_loss_14.0268_Test_loss_17.2915.pth grayscale
 #Epoch_169_Train_loss_13.8677_Test_loss_17.0471.pth no grayscale
+#Epoch_126_Train_loss_6.9641_Test_loss_9.2266.pth no gs, 0.1 KL
 
 def in_distribution_params():
     means = None
@@ -153,6 +160,34 @@ def cat_distribution_params(): #cats training set, not val set
     avg_var = np.square(avg_std)
     return (avg_mu, avg_var, avg_var_mu)
 
+def hand_distribution_params(): #hand test set
+    means = None
+    std_devs = None
+    for data in dataloaders['hand_distr']:
+        # get the inputs
+        inputs, _ = data
+
+        # wrap them in Variable
+        if torch.cuda.is_available():
+            inputs = Variable(inputs.cuda())
+        else:
+            inputs = Variable(inputs)
+        _, mu, logvar = model(inputs)
+        std = logvar.mul(0.5).exp_()
+        mu = mu.detach().cpu().numpy()
+        std = std.detach().cpu().numpy()
+        if means is None:
+            means = mu
+            std_devs = std
+            continue
+        means = np.concatenate((means, mu))
+        std_devs = np.concatenate((std_devs, std))
+    avg_mu = np.average(means, axis=0) #now a (500,) vector
+    avg_std = np.average(std_devs, axis=0) #now a (500,) vector
+    avg_var_mu = np.var(means, axis=0)  #(500,)
+    avg_var = np.square(avg_std)
+    return (avg_mu, avg_var, avg_var_mu)
+
 """def in_distribution_val_params():
     means = None
     std_devs = None
@@ -204,6 +239,7 @@ def cat_distribution_params(): #cats training set, not val set
 in_avg_mu, in_avg_var, in_avg_var_mu = in_distribution_params()
 out_avg_mu, out_avg_var, out_avg_var_mu = out_distribution_params()
 cat_avg_mu, cat_avg_var, cat_avg_var_mu = cat_distribution_params()
+hand_avg_mu, hand_avg_var, hand_avg_var_mu = hand_distribution_params()
 import pdb
 pdb.set_trace()
 #val_means, val_std_devs = in_distribution_val_params()
