@@ -30,8 +30,45 @@ def load_npy(filename):
     print("data min: ", np.min(data))
     print("data max: ", np.max(data))
 
+def threshold_test(filename, threshold):
+    print(threshold)
+    print(filename)
+    data = np.load("../ood_data/" + filename)
+    total = len(data)
+    in_d = 0
+    out_d = 0
+    for x in data:
+        if x < threshold:
+            out_d += 1
+        else:
+            in_d += 1
+    print("percent in  distr: ", in_d/(total * 1.0))
+    print("percent out  distr: ", out_d/(total * 1.0))
+
+    
+
 load_npy("in.npy")
 load_npy("out.npy")
 load_npy("flipped.npy")
 load_npy("cat.npy")
 load_npy("hand.npy")
+
+threshold_test("in.npy", 0.003)
+threshold_test("out.npy", 0.003)
+threshold_test("flipped.npy", 0.003)
+threshold_test("cat.npy", 0.003)
+threshold_test("hand.npy", 0.003)
+print("="*80)
+
+threshold_test("in.npy", 0.0035)
+threshold_test("out.npy", 0.0035)
+threshold_test("flipped.npy", 0.0035)
+threshold_test("cat.npy", 0.0035)
+threshold_test("hand.npy", 0.0035)
+
+
+threshold_test("in.npy", 0.0025)
+threshold_test("out.npy", 0.0025)
+threshold_test("flipped.npy", 0.0025)
+threshold_test("cat.npy", 0.0025)
+threshold_test("hand.npy", 0.0025)
