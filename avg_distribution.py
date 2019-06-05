@@ -43,6 +43,10 @@ kwargs = {'num_workers': 3, 'pin_memory': True}
 simple_transform = transforms.Compose([transforms.Resize((224,224)),
                                        transforms.Grayscale(num_output_channels=3),  #HACK
                                        transforms.ToTensor()])
+flipped_transform = transforms.Compose([transforms.Resize((224,224)),
+                                       transforms.Grayscale(num_output_channels=3),  #HACK
+                                       transforms.RandomRotation(degrees=90), #HACK
+                                       transforms.ToTensor()])
 cat_transform = transforms.Compose([transforms.Resize((224,224)),
                                        #transforms.Grayscale(num_output_channels=3),  #HACK
                                        transforms.ToTensor()])
@@ -55,6 +59,9 @@ in_distr_val_data_gen = torch.utils.data.DataLoader(in_distr_val,shuffle=True,ba
 out_distr = ImageFolder(path_out,simple_transform)
 out_distr_data_gen = torch.utils.data.DataLoader(out_distr,shuffle=True,batch_size=BATCH_SIZE,num_workers=kwargs['num_workers'])
 
+flipped_out_distr = ImageFolder(path_out,flipped_transform)
+flipped_out_distr_data_gen = torch.utils.data.DataLoader(flipped_out_distr,shuffle=True,batch_size=BATCH_SIZE,num_workers=kwargs['num_workers'])
+
 cat_distr = ImageFolder(path_cat,cat_transform)
 cat_distr_data_gen = torch.utils.data.DataLoader(cat_distr,shuffle=True,batch_size=BATCH_SIZE,num_workers=kwargs['num_workers'])
 
@@ -65,12 +72,14 @@ dataset_sizes = {'in_distr':len(in_distr_data_gen.dataset),
     'in_distr_val':len(in_distr_val_data_gen.dataset), 
     'out_distr':len(out_distr_data_gen.dataset),
     'cat_distr':len(cat_distr_data_gen.dataset),
-    'hand_distr':len(hand_distr_data_gen.dataset)  }
+    'hand_distr':len(hand_distr_data_gen.dataset),
+    'flipped_out_distr':len(flipped_out_distr_data_gen.dataset)  }
 dataloaders = {'in_distr':in_distr_data_gen,
     'in_distr_val':in_distr_val_data_gen, 
     'out_distr':out_distr_data_gen,
     'cat_distr':cat_distr_data_gen,
-    'hand_distr':hand_distr_data_gen}
+    'hand_distr':hand_distr_data_gen,
+    'flipped_out_distr':flipped_out_distr_data_gen}
 
 
 model = VAE(BasicBlock, [2, 2, 2, 2], latent_variable_size=500, nc=3, ngf=224, ndf=224, is_cuda=True)
@@ -194,6 +203,34 @@ def hand_distribution_params(): #hand test set
     avg_var = np.square(avg_std)
     return (avg_mu, avg_var, avg_var_mu)
 
+def flipped_out_distribution_params(): #flipped OOD data
+    means = None
+    std_devs = None
+    for data in dataloaders['flipped_out_distr']:
+        # get the inputs
+        inputs, _ = data
+
+        # wrap them in Variable
+        if torch.cuda.is_available():
+            inputs = Variable(inputs.cuda())
+        else:
+            inputs = Variable(inputs)
+        _, mu, logvar = model(inputs)
+        std = logvar.mul(0.5).exp_()
+        mu = mu.detach().cpu().numpy()
+        std = std.detach().cpu().numpy()
+        if means is None:
+            means = mu
+            std_devs = std
+            continue
+        means = np.concatenate((means, mu))
+        std_devs = np.concatenate((std_devs, std))
+    avg_mu = np.average(means, axis=0) #now a (500,) vector
+    avg_std = np.average(std_devs, axis=0) #now a (500,) vector
+    avg_var_mu = np.var(means, axis=0)  #(500,)
+    avg_var = np.square(avg_std)
+    return (avg_mu, avg_var, avg_var_mu)
+
 """def in_distribution_val_params():
     means = None
     std_devs = None
@@ -246,6 +283,7 @@ in_avg_mu, in_avg_var, in_avg_var_mu = in_distribution_params()
 out_avg_mu, out_avg_var, out_avg_var_mu = out_distribution_params()
 cat_avg_mu, cat_avg_var, cat_avg_var_mu = cat_distribution_params()
 hand_avg_mu, hand_avg_var, hand_avg_var_mu = hand_distribution_params()
+flipped_out_avg_mu, flipped_out_avg_var, flipped_out_avg_var_mu = hand_distribution_params()
 import pdb
 pdb.set_trace()
 #val_means, val_std_devs = in_distribution_val_params()
