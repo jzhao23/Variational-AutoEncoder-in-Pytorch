@@ -21,7 +21,7 @@ import warnings
 warnings.filterwarnings("ignore")
 
 path = '../OutDistribution/'
-kwargs = {'num_workers': 3, 'pin_memory': True} if is_cuda else {}
+kwargs = {'num_workers': 3, 'pin_memory': True}
 
 simple_transform = transforms.Compose([transforms.Resize((224,224)),
                                        transforms.Grayscale(num_output_channels=3),
