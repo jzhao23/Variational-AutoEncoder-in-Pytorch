@@ -44,4 +44,4 @@ for data in dataloaders['out']:
         inputs = Variable(inputs)
     
     if count == 1:
-        torchvision.utils.save_image(inputs.data, './imgs/POSTER_OUT_IMGS.jpg'.format(epoch), nrow=8, padding=2)
+        torchvision.utils.save_image(inputs.data, './imgs/POSTER_OUT_IMGS.jpg', nrow=8, padding=2)
