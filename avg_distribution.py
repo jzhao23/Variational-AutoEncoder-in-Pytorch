@@ -276,6 +276,12 @@ plt.plot(x, stats.norm.pdf(x, flipped_out_avg_mu, np.sqrt(flipped_out_avg_var_mu
 plt.show()
 plt.savefig("in_pdf.png", bbox_inches='tight')
 
+x = np.linspace(in_avg_mu - 3*np.sqrt(in_avg_var_mu), in_avg_mu + 3*np.sqrt(in_avg_var_mu), 1000)
+plt.plot(x, stats.norm.pdf(x, np.average(in_avg_mu), np.average(np.sqrt(in_avg_var_mu))))
+plt.plot(x, stats.norm.pdf(x, np.average(flipped_out_avg_mu), np.average(np.sqrt(flipped_out_avg_var_mu))))
+plt.show()
+plt.savefig("in_pdf_avg.png", bbox_inches='tight')
+
 """def get_pdfs(in_avg_mu, in_means, data_means, filename):
     cov = np.cov(in_means.T)
     pdf = []
