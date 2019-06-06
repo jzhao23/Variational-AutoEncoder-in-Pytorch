@@ -259,7 +259,7 @@ def flipped_out_distribution_params(): #flipped OOD data
     avg_var = np.square(avg_std)
     return (avg_mu, avg_var, avg_var_mu, means)
     
-import pdb;pdb.set_trace()
+#import pdb;pdb.set_trace()
 in_avg_mu, in_avg_var, in_avg_var_mu, in_means = in_distribution_params()
 #in_val_avg_mu, in_val_avg_var, in_val_avg_var_mu, in_val_means = in_distribution_params()
 out_avg_mu, out_avg_var, out_avg_var_mu, out_means = out_distribution_params()
@@ -267,7 +267,17 @@ cat_avg_mu, cat_avg_var, cat_avg_var_mu, cat_means = cat_distribution_params()
 hand_avg_mu, hand_avg_var, hand_avg_var_mu, hand_means = hand_distribution_params()
 flipped_out_avg_mu, flipped_out_avg_var, flipped_out_avg_var_mu, flipped_out_means = flipped_out_distribution_params()
 
-def get_pdfs(in_avg_mu, in_means, data_means, filename):
+import matplotlib.pyplot as plt
+import numpy as np
+import scipy.stats as stats
+import math
+
+x = np.linspace(in_avg_mu - 3*np.sqrt(in_avg_var_mu), in_avg_mu + 3*np.sqrt(in_avg_var_mu), 1000)
+plt.plot(x, stats.norm.pdf(x, mu, sigma))
+plt.show()
+plt.savefig("in_pdf.png", bbox_inches='tight')
+
+"""def get_pdfs(in_avg_mu, in_means, data_means, filename):
     cov = np.cov(in_means.T)
     pdf = []
     for x in data_means:
@@ -278,7 +288,9 @@ get_pdfs(in_avg_mu, in_means, in_means, "in")
 get_pdfs(in_avg_mu, in_means, out_means, "out")
 get_pdfs(in_avg_mu, in_means, cat_means, "cat")
 get_pdfs(in_avg_mu, in_means, hand_means, "hand")
-get_pdfs(in_avg_mu, in_means, flipped_out_means, "flipped")
+get_pdfs(in_avg_mu, in_means, flipped_out_means, "flipped")"""
+
+
 
 #val_means, val_std_devs = in_distribution_val_params()
 #out_means, out_std_devs = out_distribution_params()
