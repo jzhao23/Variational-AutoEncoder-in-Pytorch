@@ -269,6 +269,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import scipy.stats as stats
 import math
+import matplotlib.patches as mpatches
 
 in_mu = np.average(in_avg_mu)
 in_sigma = np.average(np.sqrt(in_avg_var_mu))
@@ -291,6 +292,12 @@ plt.plot(x, stats.norm.pdf(x, out_mu, out_sigma), 'b')
 plt.plot(x, stats.norm.pdf(x, flipped_mu, flipped_sigma), 'c')
 plt.plot(x, stats.norm.pdf(x, cat_mu, cat_sigma), 'r')
 plt.plot(x, stats.norm.pdf(x, hand_mu, hand_sigma), 'm')
+g_patch = mpatches.Patch(color='green', label='"In"')
+b_patch = mpatches.Patch(color='blue', label='"Out"')
+c_patch = mpatches.Patch(color='cyan', label='"Flipped"')
+r_patch = mpatches.Patch(color='red', label='"Cat"')
+m_patch = mpatches.Patch(color='magenta', label='"Hand"')
+plt.legend(handles=[g_patch, b_patch, c_patch, r_patch, m_patch])
 plt.show()
 plt.savefig("in_pdf.png", bbox_inches='tight')
 
@@ -300,10 +307,16 @@ plt.plot(x, stats.norm.pdf(x, out_mu, out_sigma), 'b')
 plt.plot(x, stats.norm.pdf(x, flipped_mu, flipped_sigma), 'c')
 plt.plot(x, stats.norm.pdf(x, cat_mu, cat_sigma), 'r')
 plt.plot(x, stats.norm.pdf(x, hand_mu, hand_sigma), 'm')
+g_patch = mpatches.Patch(color='green', label='"In"')
+b_patch = mpatches.Patch(color='blue', label='"Out"')
+c_patch = mpatches.Patch(color='cyan', label='"Flipped"')
+r_patch = mpatches.Patch(color='red', label='"Cat"')
+m_patch = mpatches.Patch(color='magenta', label='"Hand"')
+plt.legend(handles=[g_patch, b_patch, c_patch, r_patch, m_patch])
 plt.show()
 plt.savefig("in_pdf1.png", bbox_inches='tight')
 
-x = np.linspace(in_mu - 5*np.sqrt(in_sigma), in_mu + 5*np.sqrt(in_sigma), 1000)
+"""x = np.linspace(in_mu - 5*np.sqrt(in_sigma), in_mu + 5*np.sqrt(in_sigma), 1000)
 plt.plot(x, stats.norm.pdf(x, in_mu, in_sigma), 'g')
 plt.plot(x, stats.norm.pdf(x, out_mu, out_sigma), 'b')
 plt.plot(x, stats.norm.pdf(x, flipped_mu, flipped_sigma), 'c')
@@ -319,7 +332,7 @@ plt.plot(x, stats.norm.pdf(x, flipped_mu, flipped_sigma), 'c')
 plt.plot(x, stats.norm.pdf(x, cat_mu, cat_sigma), 'r')
 plt.plot(x, stats.norm.pdf(x, hand_mu, hand_sigma), 'm')
 plt.show()
-plt.savefig("in_pdf3.png", bbox_inches='tight')
+plt.savefig("in_pdf3.png", bbox_inches='tight')"""
 
 """def get_pdfs(in_avg_mu, in_means, data_means, filename):
     cov = np.cov(in_means.T)
