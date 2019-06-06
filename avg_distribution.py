@@ -271,7 +271,8 @@ import scipy.stats as stats
 import math
 
 x = np.linspace(in_avg_mu - 3*np.sqrt(in_avg_var_mu), in_avg_mu + 3*np.sqrt(in_avg_var_mu), 1000)
-plt.plot(x, stats.norm.pdf(x, in_avg_mu, np.sqrt(in_avg_var_mu)))
+plt.plot(x, multivariate_normal.pdf(x, in_avg_mu, np.sqrt(in_avg_var_mu)))
+plt.plot(x, multivariate_normal.pdf(x, flipped_out_avg_mu, np.sqrt(flipped_out_avg_var_mu)))
 plt.show()
 plt.savefig("in_pdf.png", bbox_inches='tight')
 
