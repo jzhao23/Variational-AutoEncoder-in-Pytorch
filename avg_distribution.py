@@ -270,21 +270,27 @@ import numpy as np
 import scipy.stats as stats
 import math
 
-x = np.linspace(in_avg_mu - 0.25*np.sqrt(in_avg_var_mu), in_avg_mu + 0.25*np.sqrt(in_avg_var_mu), 100)
-plt.plot(x, stats.norm.pdf(x, in_avg_mu, np.sqrt(in_avg_var_mu)))
-plt.plot(x, stats.norm.pdf(x, flipped_out_avg_mu, np.sqrt(flipped_out_avg_var_mu)))
+in_mu = np.average(in_avg_mu)
+in_sigma = np.average(np.sqrt(in_avg_var_mu))
+
+flipped_mu = np.average(flipped_out_avg_mu)
+flipped_sigma = np.average(np.sqrt(flipped_out_avg_var_mu))
+
+x = np.linspace(in_mu - 0.25*np.sqrt(in_sigma), in_mu + 0.25*np.sqrt(in_sigma), 100)
+plt.plot(x, stats.norm.pdf(x, in_mu, in_sigma))
+plt.plot(x, stats.norm.pdf(x, flipped_mu, flipped_sigma))
 plt.show()
 plt.savefig("in_pdf.png", bbox_inches='tight')
 
-x = np.linspace(in_avg_mu - 3*np.sqrt(in_avg_var_mu), in_avg_mu + 3*np.sqrt(in_avg_var_mu), 1000)
-plt.plot(x, stats.norm.pdf(x, np.average(in_avg_mu), np.average(np.sqrt(in_avg_var_mu))))
-plt.plot(x, stats.norm.pdf(x, np.average(flipped_out_avg_mu), np.average(np.sqrt(flipped_out_avg_var_mu))))
+x = np.linspace(in_mu - 3*np.sqrt(in_sigma), in_mu + 3*np.sqrt(in_sigma), 1000)
+plt.plot(x, stats.norm.pdf(x, in_mu, in_sigma))
+plt.plot(x, stats.norm.pdf(x, flipped_mu, flipped_sigma))
 plt.show()
 plt.savefig("in_pdf_avg.png", bbox_inches='tight')
 
-x = np.linspace(in_avg_mu - 1*np.sqrt(in_avg_var_mu), in_avg_mu + 1*np.sqrt(in_avg_var_mu), 1000)
-plt.plot(x, stats.norm.pdf(x, np.average(in_avg_mu), np.average(np.sqrt(in_avg_var_mu))))
-plt.plot(x, stats.norm.pdf(x, np.average(flipped_out_avg_mu), np.average(np.sqrt(flipped_out_avg_var_mu))))
+x = np.linspace(in_mu - 1*np.sqrt(in_sigma), in_mu + 1*np.sqrt(in_sigma), 1000)
+plt.plot(x, stats.norm.pdf(x, in_mu, in_sigma))
+plt.plot(x, stats.norm.pdf(x, flipped_mu, flipped_sigma))
 plt.show()
 plt.savefig("in_pdf_avg2.png", bbox_inches='tight')
 
