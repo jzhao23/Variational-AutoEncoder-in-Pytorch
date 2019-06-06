@@ -40,7 +40,7 @@ path_hand = '../Bone/valid/'
 out_data_gen = torch.utils.data.DataLoader(out,shuffle=True,batch_size=BATCH_SIZE,num_workers=kwargs['num_workers'])
 cat_distr = ImageFolder(path_cat,cat_transform)
 cat_distr_data_gen = torch.utils.data.DataLoader(cat_distr,batch_size=BATCH_SIZE,num_workers=kwargs['num_workers'])
-flipped_out_distr = ImageFolder(out,flipped_transform)
+flipped_out_distr = ImageFolder(path,flipped_transform)
 flipped_out_distr_data_gen = torch.utils.data.DataLoader(flipped_out_distr,batch_size=BATCH_SIZE,num_workers=kwargs['num_workers'])
 hand_distr = ImageFolder(path_hand,simple_transform)
 hand_distr_data_gen = torch.utils.data.DataLoader(hand_distr,batch_size=BATCH_SIZE,num_workers=kwargs['num_workers'])
