@@ -27,7 +27,7 @@ simple_transform = transforms.Compose([transforms.Resize((224,224)),
                                        transforms.Grayscale(num_output_channels=3),
                                        transforms.ToTensor()])
 out = ImageFolder(path,simple_transform)
-out_data_gen = torch.utils.data.DataLoader(out,shuffle=True,batch_size=BATCH_SIZE,num_workers=kwargs['num_workers'])
+out_data_gen = torch.utils.data.DataLoader(out,shuffle=True,batch_size=128,num_workers=kwargs['num_workers'])
 dataset_sizes = {'out':len(out_data_gen.dataset)}
 dataloaders = {'out':out_data_gen}
 
