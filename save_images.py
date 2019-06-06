@@ -32,7 +32,7 @@ dataset_sizes = {'out':len(out_data_gen.dataset)}
 dataloaders = {'out':out_data_gen}
 
 count = 0
-for data in dataloaders['valid']:
+for data in dataloaders['out']:
     count += 1
     # get the inputs
     inputs, _ = data
