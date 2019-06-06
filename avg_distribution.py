@@ -24,8 +24,6 @@ from vae import VAE, ShallowVAE, BasicBlock
 
 
 parser = argparse.ArgumentParser(description='PyTorch distribution params')
-parser.add_argument('--path', type=str,
-                    help='path to .pth file in models/')
 parser.add_argument('--batch-size', type=int, default=128, metavar='N',
                     help='input batch size for training (default: 128)')
 args = parser.parse_args()
@@ -83,7 +81,7 @@ dataloaders = {'in_distr':in_distr_data_gen,
 
 
 model = VAE(BasicBlock, [2, 2, 2, 2], latent_variable_size=500, nc=3, ngf=224, ndf=224, is_cuda=True)
-model.load_state_dict(torch.load("models/"+args.path))
+model.load_state_dict(torch.load("models/"+"Epoch_126_Train_loss_6.9641_Test_loss_9.2266.pth"))
 model.cuda()
 model.eval()
 
